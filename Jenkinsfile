@@ -7,11 +7,30 @@ pipeline {
 cp /var/jenkins_home/userContent/target.tar .
 tar xvf target.tar
 '''
+        stash 'ARTIFACTS'
       }
     }
 
     stage('Terraform apply') {
+      agent {
+        kubernetes {
+          yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: shell
+    image: amazon/aws-cli:latest
+    command:
+    - /bin/sh
+    tty: true
+'''
+          defaultContainer 'shell'
+        }
+
+      }
       steps {
+        unstash 'ARTIFACTS'
         withVault(configuration: [vaultUrl: 'https://dodt-vault.acldevsre.de',  vaultCredentialId: 'approle-for-vault', engineVersion: 2], vaultSecrets: [[path: 'jenkins/tjk', secretValues: [[envVar: 'AWS_ACCESS_KEY_ID', vaultKey: 'aws_access_key_id'],[envVar: 'AWS_SECRET_ACCESS_KEY', vaultKey: 'aws_secret_access_key'],[envVar: 'AWS_SESSION_TOKEN', vaultKey: 'aws_session_token']]]]) {
           sh '''
 
