@@ -14,9 +14,9 @@ tar xvf target.tar
       steps {
         withVault(configuration: [vaultUrl: 'https://dodt-vault.acldevsre.de',  vaultCredentialId: 'approle-for-vault', engineVersion: 2], vaultSecrets: [[path: 'jenkins/tjk', secretValues: [[envVar: 'AWS_ACCESS_KEY_ID', vaultKey: 'aws_access_key_id'],[envVar: 'AWS_SECRET_ACCESS_KEY', vaultKey: 'aws_secret_access_key'],[envVar: 'AWS_SESSION_TOKEN', vaultKey: 'aws_session_token']]]]) {
           sh '''
-echo \'$AWS_ACCESS_KEY_ID\'
-echo \'$AWS_SECRET_ACCESS_KEY\'
-echo \'$AWS_SESSION_TOKEN\'
+echo $AWS_ACCESS_KEY_ID
+echo $AWS_SECRET_ACCESS_KEY
+echo $AWS_SESSION_TOKEN
 cd Target_infra
 ls
 terraform init
