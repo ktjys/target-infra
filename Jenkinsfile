@@ -22,4 +22,7 @@ ls'''
     }
 
   }
+  tools {
+    terraform 'terraform-0.12.29'
+  }
 }
