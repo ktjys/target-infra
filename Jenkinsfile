@@ -41,6 +41,7 @@ export AWS_SESSION_TOKEN=IQoJb3JpZ2luX2VjEMj//////////wEaDmFwLW5vcnRoZWFzdC0yIkY
 echo $AWS_ACCESS_KEY_ID
 echo $AWS_SECRET_ACCESS_KEY
 echo $AWS_SESSION_TOKEN
+aws ec2 describe-instances --filters "Name=instance-type,Values=t2.micro" --query "Reservations[].Instances[].InstanceId"
 aws s3 ls
 
 cd Target_infra
