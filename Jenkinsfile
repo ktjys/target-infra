@@ -8,6 +8,7 @@ cp /var/jenkins_home/terraform.tar .
 tar xvf terraform.tar
 '''
         sh '''
+whoami
             KUBECTL=/usr/local/bin/kubectl
             if [ -f "$KUBECTL" ]; then
               echo "$KUBECTL exists"
