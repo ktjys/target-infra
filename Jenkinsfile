@@ -36,8 +36,7 @@ pwd
               curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
               chmod +x ./kubectl
               mv ./kubectl $KUBECTL
-export PATH=$PATH:/home/jenkins/bin
-ls -al ~/bin
+              export PATH=$PATH:/home/jenkins/bin
               kubectl version --short --client
             fi
           '''
