@@ -25,7 +25,7 @@ spec:
         sh '''
 curl https://nexus.acldevsre.de/repository/target-infra/target-infra/target-infra-tar/v0.0.1/target-infra-tar-v0.0.1.tar -o terraform.tar 
 tar xvf terraform.tar
-sed -i "s/eks_public_access_cidrs.*/eks_public_access_cidrs= [\\"15.164.177.114\\",\\"3.35.17.6\\",\\"13.125.181.170\\",/" ./terraform/Target_infra/terraform.auto.tfvars
+sed -i "s/eks_public_access_cidrs.*/eks_public_access_cidrs= [\\"15.164.177.114/32\\",\\"3.35.17.6/32\\",\\"13.125.181.170/32\\",/" ./terraform/Target_infra/terraform.auto.tfvars
 '''
       }
     }
