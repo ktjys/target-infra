@@ -41,7 +41,7 @@ sed -i "s/eks_public_access_cidrs.*/eks_public_access_cidrs= [\\"15.164.177.114\
           sh '''
 cd terraform/Target_infra
 terraform init
-terraform apply -auto-approve
+terraform destroy -force
 '''
         }
 
