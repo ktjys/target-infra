@@ -99,7 +99,7 @@ cat ~/.kube/config
                 kubectl get ns
 
 kubectl set env daemonset -n kube-system aws-node AWS_VPC_K8S_CNI_EXTERNALSNAT=true
-kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"
+#kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"
 
 '''
           }
@@ -124,6 +124,15 @@ kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller/
                     helm repo update
                   fi
                   
+                KUBECONFIG_PATH=~/.kube
+                if [ -d "$KUBECONFIG_PATH" ]; then
+                    echo "$KUBECONFIG_PATH exist"
+                else
+                    mkdir $KUBECONFIG_PATH
+                fi
+                
+                cp config-$EKS_CLUSTER ~/.kube/config
+
                   ALB_REL=`helm ls -n kube-system | awk \'/aws-load-balancer-controller/\' | sed \'s/ *$//g\'`
                   if [ ! "$ALB_REL" ]; then
                     helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=$EKS_CLUSTER
