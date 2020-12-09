@@ -27,8 +27,6 @@ curl https://nexus.acldevsre.de/repository/target-infra/target-infra/target-infr
 tar xvf terraform.tar
 '''
         sh '''
-whoami
-pwd
             KUBECTL=~/bin/kubectl
             if [ -f "$KUBECTL" ]; then
               echo "$KUBECTL exists"
@@ -62,7 +60,6 @@ terraform apply -auto-approve
         container(name: 'awscli') {
           withVault(configuration: [vaultUrl: 'https://dodt-vault.acldevsre.de',  vaultCredentialId: 'approle-for-vault', engineVersion: 2], vaultSecrets: [[path: 'jenkins/tjk', secretValues: [[envVar: 'AWS_ACCESS_KEY_ID', vaultKey: 'aws_access_key_id'],[envVar: 'AWS_SECRET_ACCESS_KEY', vaultKey: 'aws_secret_access_key'],[envVar: 'AWS_SESSION_TOKEN', vaultKey: 'aws_session_token']]]]) {
             sh '''
-                export PATH=$PATH:/home/jenkins/bin
                 cd terraform/Target_infra
 
 mkdir ~/.aws -p
@@ -81,6 +78,18 @@ aws_access_key_id=$AWS_ACCESS_KEY_ID
 aws_secret_access_key=$AWS_SECRET_ACCESS_KEY
 aws_session_token=$AWS_SESSION_TOKEN
 EOF
+
+            KUBECTL=~/bin/kubectl
+            if [ -f "$KUBECTL" ]; then
+              echo "$KUBECTL exists"
+            else
+              mkdir ~/bin -p
+              curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+              chmod +x ./kubectl
+              mv ./kubectl $KUBECTL
+              export PATH=$PATH:/home/jenkins/bin
+              kubectl version --short --client
+            fi
 
                 EKS_CLUSTER=`terraform output | awk \'/cluster_name/ {print $3}\'`
                 cd $EKS_CLUSTER
