@@ -84,6 +84,7 @@ EOF
             fi
 
                 EKS_CLUSTER=`terraform output | awk \'/cluster_name/ {print $3}\'`
+                echo "cluster_name = $EKS_CLUSTER" > output.tmp
                 cd $EKS_CLUSTER
                 ./1.update-kubeconfig.sh
                 
@@ -115,7 +116,7 @@ kubectl set env daemonset -n kube-system aws-node AWS_VPC_K8S_CNI_EXTERNALSNAT=t
           dir(path: './terraform/Target_infra') {
             sh '''
 
-                  EKS_CLUSTER=`terraform output | awk \'/cluster_name/ {print $3}\'`
+                  EKS_CLUSTER=`cat output.tmp | awk \'/cluster_name/ {print $3}\'`
                   echo "$EKS_CLUSTER"
                   EKS_REPO=`helm repo list|awk \'/eks/\' | sed \'s/ *$//g\'`
                   if [ ! "$EKS_REPO" ]; then
