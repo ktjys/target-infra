@@ -82,6 +82,21 @@ terraform apply -auto-approve
             sh '''
                 export PATH=$PATH:/home/jenkins/bin
                 cd terraform/Target_infra
+
+mkdir ~/.aws -p
+AWS_PROFILE=$(cat terraform.auto.tfvars | awk \'/aws_profile/ {print $3}\' | tr -d """)
+cat << EOF > ~/.aws/config
+[profile $AWS_PROFILE]
+region = ap-northeast-2
+output = json
+EOF
+cat << EOF > ~/.aws/credentials
+[$AWS_PROFILE]
+aws_access_key_id=$AWS_ACCESS_KEY_ID
+aws_secret_access_key=$AWS_SECRET_ACCESS_KEY
+aws_session_token=$AWS_SESSION_TOKEN
+EOF
+
                 EKS_CLUSTER=`terraform output | awk \'/cluster_name/ {print $3}\'`
                 cd $EKS_CLUSTER
                 ./1.update-kubeconfig.sh
