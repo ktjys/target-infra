@@ -1,5 +1,23 @@
 pipeline {
-  agent any
+  agent {
+    kubernetes {
+      yaml '''
+kind: Pod
+metadata:
+  name: aws-cli
+  labels:
+    app: awscli
+spec:
+  containers:
+  - name: cli
+    image: amazon/aws-cli:latest
+    command:
+    - /bin/sh
+    tty: true
+'''
+    }
+
+  }
   stages {
     stage('Prepare') {
       steps {
@@ -9,7 +27,8 @@ tar xvf terraform.tar
 '''
         sh '''
 whoami
-            KUBECTL=/usr/local/bin/kubectl
+pwd
+            KUBECTL=./kubectl
             if [ -f "$KUBECTL" ]; then
               echo "$KUBECTL exists"
             else
@@ -17,28 +36,6 @@ whoami
               chmod +x ./kubectl
               mv ./kubectl $KUBECTL
               kubectl version --short --client
-            fi
-          '''
-        sh '''
-            AWSCLI=/usr/local/bin/aws
-            if [ -f "$AWSCLI" ]; then
-                echo "$AWSCLI exists"
-            else
-                curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                unzip -o awscliv2.zip
-                ./aws/install
-            fi
-          
-          '''
-        sh '''
-            HELM=/usr/local/bin/helm
-            if [ -f "$HELM" ]; then
-                echo "$HELM exists"
-            else
-                curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
-                chmod 700 get_helm.sh
-                ./get_helm.sh
-                helm version
             fi
           '''
       }
