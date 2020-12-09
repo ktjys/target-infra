@@ -15,6 +15,7 @@ spec:
     - /bin/sh
     tty: true
 '''
+      defaultContainer 'aws-cli'
     }
 
   }
