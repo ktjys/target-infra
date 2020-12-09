@@ -4,7 +4,7 @@ pipeline {
       yaml '''
 kind: Pod
 metadata:
-  name: aws-cli
+  name: awscli
   labels:
     app: awscli
 spec:
@@ -15,7 +15,7 @@ spec:
     - /bin/sh
     tty: true
 '''
-      defaultContainer 'aws-cli'
+      defaultContainer 'awscli'
     }
 
   }
