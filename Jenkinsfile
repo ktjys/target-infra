@@ -37,6 +37,7 @@ pwd
               chmod +x ./kubectl
               mv ./kubectl $KUBECTL
 export PATH=$PATH:~/bin
+ls -al ~/bin
               kubectl version --short --client
             fi
           '''
