@@ -28,13 +28,14 @@ tar xvf terraform.tar
         sh '''
 whoami
 pwd
-            KUBECTL=./kubectl
+            KUBECTL=~/kubectl
             if [ -f "$KUBECTL" ]; then
               echo "$KUBECTL exists"
             else
               curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
               chmod +x ./kubectl
               mv ./kubectl $KUBECTL
+export PATH=$PATH:~
               kubectl version --short --client
             fi
           '''
