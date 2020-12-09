@@ -50,7 +50,7 @@ pwd
           sh '''
 cd terraform/Target_infra
 terraform init
-terraform plan
+#terraform plan
 '''
         }
 
@@ -69,7 +69,7 @@ mkdir ~/.aws -p
 AWS_PROFILE=$(cat terraform.auto.tfvars | awk \'/aws_profile/ {print $3}\' | tr -d """)
 echo $AWS_PROFILE
 
-cat << EOF > ~/.aws/config
+cat > ~/.aws/config << EOF
 [profile $AWS_PROFILE]
 region = ap-northeast-2
 output = json
