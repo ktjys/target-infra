@@ -132,7 +132,7 @@ kubectl set env daemonset -n kube-system aws-node AWS_VPC_K8S_CNI_EXTERNALSNAT=t
                     mkdir $KUBECONFIG_PATH
                 fi
                 
-                cp config-$EKS_CLUSTER ~/.kube/config
+                cp ./$EKS_CLUSTER/config-$EKS_CLUSTER ~/.kube/config
 
                   ALB_REL=`helm ls -n kube-system | awk \'/aws-load-balancer-controller/\' | sed \'s/ *$//g\'`
                   if [ ! "$ALB_REL" ]; then
