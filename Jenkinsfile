@@ -14,6 +14,11 @@ spec:
     command:
     - /bin/sh
     tty: true
+  - name: helm
+    image: alpine/helm:latest
+    command:
+    - /bin/sh
+    tty: true
 '''
       defaultContainer 'jnlp'
     }
@@ -90,8 +95,40 @@ EOF
                 fi
                 
                 cp config-$EKS_CLUSTER ~/.kube/config
+cat ~/.kube/config
                 kubectl get ns
+
+kubectl set env daemonset -n kube-system aws-node AWS_VPC_K8S_CNI_EXTERNALSNAT=true
+kubectl apply -k "github.com/aws/eks-charts/stable/aws-load-balancer-controller//crds?ref=master"
+
 '''
+          }
+
+        }
+
+      }
+    }
+
+    stage('Install alb ingress controller') {
+      steps {
+        container(name: 'helm') {
+          dir(path: './terraform/Target_infra') {
+            sh '''
+
+                  EKS_CLUSTER=`terraform output | awk \'/cluster_name/ {print $3}\'`
+                  echo "$EKS_CLUSTER"
+                  EKS_REPO=`helm repo list|awk \'/eks/\' | sed \'s/ *$//g\'`
+                  if [ ! "$EKS_REPO" ]; then
+                    echo "eks helm repo not exist"
+                    helm repo add eks https://aws.github.io/eks-charts
+                    helm repo update
+                  fi
+                  
+                  ALB_REL=`helm ls -n kube-system | awk \'/aws-load-balancer-controller/\' | sed \'s/ *$//g\'`
+                  if [ ! "$ALB_REL" ]; then
+                    helm upgrade -i aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=$EKS_CLUSTER
+                  fi   
+              '''
           }
 
         }
