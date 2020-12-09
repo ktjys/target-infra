@@ -38,6 +38,7 @@ pwd
               mv ./kubectl $KUBECTL
 export PATH=$PATH:~/bin
 ls -al ~/bin
+~/bin/kubectl version
               kubectl version --short --client
             fi
           '''
