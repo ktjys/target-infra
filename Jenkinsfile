@@ -66,7 +66,7 @@ terraform init
                 cd terraform/Target_infra
 
 mkdir ~/.aws -p
-AWS_PROFILE=$(cat terraform.auto.tfvars | awk \'/aws_profile/ {print $3}\' | tr -d """)
+AWS_PROFILE=$(cat terraform.auto.tfvars | awk \'/aws_profile/ {print $3}\' | tr -d "\\"")
 echo $AWS_PROFILE
 
 cat > ~/.aws/config << EOF
