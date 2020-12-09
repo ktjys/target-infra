@@ -57,24 +57,6 @@ terraform plan
       }
     }
 
-    stage('Deploy Approval') {
-      steps {
-        input(message: 'Are you Confirm?', submitter: 'tjk')
-      }
-    }
-
-    stage('Terraform apply') {
-      steps {
-        withVault(configuration: [vaultUrl: 'https://dodt-vault.acldevsre.de',  vaultCredentialId: 'approle-for-vault', engineVersion: 2], vaultSecrets: [[path: 'jenkins/tjk', secretValues: [[envVar: 'AWS_ACCESS_KEY_ID', vaultKey: 'aws_access_key_id'],[envVar: 'AWS_SECRET_ACCESS_KEY', vaultKey: 'aws_secret_access_key'],[envVar: 'AWS_SESSION_TOKEN', vaultKey: 'aws_session_token']]]]) {
-          sh '''
-cd terraform/Target_infra
-terraform apply -auto-approve
-'''
-        }
-
-      }
-    }
-
     stage('Get Kubeconfig') {
       steps {
         container(name: 'awscli') {
@@ -85,11 +67,14 @@ terraform apply -auto-approve
 
 mkdir ~/.aws -p
 AWS_PROFILE=$(cat terraform.auto.tfvars | awk \'/aws_profile/ {print $3}\' | tr -d """)
+echo $AWS_PROFILE
+
 cat << EOF > ~/.aws/config
 [profile $AWS_PROFILE]
 region = ap-northeast-2
 output = json
 EOF
+
 cat << EOF > ~/.aws/credentials
 [$AWS_PROFILE]
 aws_access_key_id=$AWS_ACCESS_KEY_ID
