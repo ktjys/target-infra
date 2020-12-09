@@ -26,19 +26,6 @@ spec:
 curl https://nexus.acldevsre.de/repository/target-infra/target-infra/target-infra-tar/v0.0.1/target-infra-tar-v0.0.1.tar -o terraform.tar 
 tar xvf terraform.tar
 '''
-        sh '''
-            KUBECTL=~/bin/kubectl
-            if [ -f "$KUBECTL" ]; then
-              echo "$KUBECTL exists"
-            else
-              mkdir ~/bin -p
-              curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
-              chmod +x ./kubectl
-              mv ./kubectl $KUBECTL
-              export PATH=$PATH:/home/jenkins/bin
-              kubectl version --short --client
-            fi
-          '''
       }
     }
 
@@ -79,7 +66,7 @@ aws_secret_access_key=$AWS_SECRET_ACCESS_KEY
 aws_session_token=$AWS_SESSION_TOKEN
 EOF
 
-            KUBECTL=~/bin/kubectl
+            KUBECTL=/usr/local/bin/kubectl
             if [ -f "$KUBECTL" ]; then
               echo "$KUBECTL exists"
             else
@@ -87,7 +74,6 @@ EOF
               curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
               chmod +x ./kubectl
               mv ./kubectl $KUBECTL
-              export PATH=$PATH:/home/jenkins/bin
               kubectl version --short --client
             fi
 
