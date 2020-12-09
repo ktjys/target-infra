@@ -22,7 +22,7 @@ spec:
     stage('Prepare') {
       steps {
         sh '''
-cp /var/jenkins_home/terraform.tar .
+curl https://nexus.acldevsre.de/repository/target-infra/target-infra/target-infra-tar/v0.0.1/target-infra-tar-v0.0.1.tar -o terraform.tar 
 tar xvf terraform.tar
 '''
         sh '''
