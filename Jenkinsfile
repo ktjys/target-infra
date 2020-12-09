@@ -4,12 +4,12 @@ pipeline {
       yaml '''
 kind: Pod
 metadata:
-  name: awscli
+  name: target-infra
   labels:
-    app: awscli
+    app: jenkins-slave
 spec:
   containers:
-  - name: cli
+  - name: awscli
     image: amazon/aws-cli:latest
     command:
     - /bin/sh
